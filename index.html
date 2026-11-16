@@ -1,319 +1,71 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HQ Digital: O Conto da Maçã</title>
-    <style>
-        :root {
-            --bg-color: #1a1a1a;
-            --btn-bg: #d32f2f;
-            --btn-hover: #b71c1c;
-            --btn-text: #fff;
-            --border-color: #000;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<title>Minha HQ Digital</title>
 
-        body {
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
-            background-color: var(--bg-color);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            min-height: 100vh;
-        }
+<style>
+body {
+margin: 0;
+padding: 20px;
+background-color: #171717;
+color: white;
+font-family: Arial, sans-serif;
+text-align: center;
+}
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-        }
+h1 {
+color: #ffdd33;
+font-size: 32px;
+}
 
-        header h1 {
-            font-size: 2.5rem;
-            color: #ffeb3b;
-        }
+p {
+font-size: 18px;
+}
 
-        .comic-container {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            width: 100%;
-            max-width: 900px;
-        }
+img {
+display: block;
+width: 100%;
+max-width: 900px;
+height: auto;
+margin: 25px auto;
+border-radius: 10px;
+}
 
-        .scene {
-            position: relative;
-            width: 100%;
-            border: 8px solid var(--border-color);
-            border-radius: 4px;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
-            background-color: #333; /* Cor de fundo para caso a imagem não carregue */
-            overflow: hidden;
-            min-height: 300px; /* Garante que a cena apareça mesmo sem imagem */
-        }
-
-        .scene img {
-            width: 100%;
-            height: auto;
-            display: block;
-            min-height: 300px;
-            object-fit: cover;
-        }
-
-        .narration-box {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #ffeb3b;
-            color: #000;
-            padding: 10px 15px;
-            border: 3px solid #000;
-            box-shadow: 4px 4px 0px #000;
-            font-weight: bold;
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-            max-width: 60%;
-            z-index: 10;
-            line-height: 1.3;
-        }
-
-        .bubble {
-            position: absolute;
-            background-color: #fff;
-            color: #000;
-            border: 3px solid #000;
-            border-radius: 20px;
-            padding: 10px 15px;
-            font-size: clamp(0.8rem, 2vw, 1.1rem);
-            font-weight: bold;
-            max-width: 45%;
-            z-index: 10;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
-            line-height: 1.3;
-            text-align: center;
-        }
-
-        .bubble::after {
-            content: '';
-            position: absolute;
-            border-style: solid;
-        }
-
-        /* Cena 1 */
-        .scene-1 .bubble-1 { bottom: 10%; right: 5%; }
-        .scene-1 .bubble-1::after { border-width: 15px 15px 0 0; border-color: #fff transparent transparent transparent; bottom: -12px; right: 20px; }
-        .scene-1 .bubble-1::before { content: ''; position: absolute; border-width: 18px 18px 0 0; border-style: solid; border-color: #000 transparent transparent transparent; bottom: -24px; right: 17px; z-index: -1; }
-
-        /* Cena 2 */
-        .scene-2 .bubble-1 { top: 10%; right: 5%; }
-        .scene-2 .bubble-1::after { border-width: 15px 15px 0 0; border-color: #fff transparent transparent transparent; bottom: -12px; left: 20px; }
-        .scene-2 .bubble-1::before { content: ''; position: absolute; border-width: 18px 18px 0 0; border-style: solid; border-color: #000 transparent transparent transparent; bottom: -24px; left: 17px; z-index: -1; }
-
-        /* Cena 3 */
-        .scene-3 .bubble-1 { top: 10%; right: 5%; border-radius: 50% / 20%; }
-        .scene-3 .bubble-1::after { border-width: 15px 0 0 15px; border-color: #fff transparent transparent transparent; bottom: -10px; left: 30px; }
-        .scene-3 .bubble-1::before { content: ''; position: absolute; border-width: 18px 0 0 18px; border-style: solid; border-color: #000 transparent transparent transparent; bottom: -22px; left: 27px; z-index: -1; }
-
-        /* Cena 4 */
-        .scene-4 .bubble-1 { display: none; }
-
-        /* Cena 5 */
-        .scene-5 .bubble-1 { top: 35%; left: 5%; max-width: 40%; }
-        .scene-5 .bubble-1::after { border-width: 0 15px 15px 0; border-color: transparent #fff transparent transparent; top: -12px; left: 20px; }
-        .scene-5 .bubble-1::before { content: ''; position: absolute; border-width: 0 18px 18px 0; border-style: solid; border-color: transparent #000 transparent transparent; top: -24px; left: 17px; z-index: -1; }
-        
-        .scene-5 .bubble-2 { top: 5%; right: 5%; max-width: 35%; background-color: #ffeb3b; }
-        .scene-5 .bubble-2::after { border-width: 15px 15px 0 0; border-color: #ffeb3b transparent transparent transparent; bottom: -12px; left: 20px; }
-        .scene-5 .bubble-2::before { content: ''; position: absolute; border-width: 18px 18px 0 0; border-style: solid; border-color: #000 transparent transparent transparent; bottom: -24px; left: 17px; z-index: -1; }
-
-        .scene-5 .bubble-3 { bottom: 25%; right: 5%; max-width: 35%; }
-        .scene-5 .bubble-3::after { border-width: 15px 0 0 15px; border-color: #fff transparent transparent transparent; top: 40%; left: -12px; }
-        .scene-5 .bubble-3::before { content: ''; position: absolute; border-width: 18px 0 0 18px; border-style: solid; border-color: #000 transparent transparent transparent; top: 38%; left: -24px; z-index: -1; }
-
-        /* Cena 5 - Balão extra (Cenouras) */
-        .scene-5 .bubble-4 { top: 80%; left: 5%; max-width: 35%; }
-        .scene-5 .bubble-4::after { border-width: 0 15px 15px 0; border-color: transparent #fff transparent transparent; top: -12px; left: 20px; }
-        .scene-5 .bubble-4::before { content: ''; position: absolute; border-width: 0 18px 18px 0; border-style: solid; border-color: transparent #000 transparent transparent; top: -24px; left: 17px; z-index: -1; }
-
-        .btn-listen {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background-color: var(--btn-bg);
-            color: var(--btn-text);
-            border: 3px solid #000;
-            padding: 10px 20px;
-            font-family: inherit;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 3px 3px 0px #000;
-            transition: all 0.1s ease;
-        }
-
-        .btn-listen:hover { background-color: var(--btn-hover); transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
-        .btn-listen:active { transform: translate(3px, 3px); box-shadow: none; }
-        .btn-listen svg { width: 18px; height: 18px; fill: currentColor; }
-
-        @media (max-width: 600px) {
-            .narration-box { top: 10px; left: 10px; padding: 8px; max-width: 70%; }
-            .bubble { padding: 8px 10px; max-width: 55% !important; }
-            .btn-listen { bottom: 10px; right: 10px; padding: 8px 15px; }
-        }
-    </style>
+footer {
+padding: 30px;
+color: #cccccc;
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <h1>O Conto da Maçã</h1>
-        <p>Role para baixo e leia a história</p>
-    </header>
+<h1>O Conto da Maçã</h1>
+<p>Role para baixo e leia a história</p>
 
-    <main class="comic-container" id="comicContainer"></main>
+<img src="imagens/cena1.png" alt="Cena 1">
+<img src="imagens/cena2.png" alt="Cena 2">
+<img src="imagens/cena3.png" alt="Cena 3">
+<img src="imagens/cena4.png" alt="Cena 4">
+<img src="imagens/cena5.png" alt="Cena 5">
 
-    <script>
-        const scenesData = [
-            {
-                id: 1,
-                image: 'imagens/cena1.png',
-                narration: 'Nas sombras de um castelo esquecido, a traição fermenta.',
-                bubbles: [
-                    { text: 'Apenas uma gota deste elixir e o sono eterno será dele.', type: 'speech' }
-                ]
-            },
-            {
-                id: 2,
-                image: 'imagens/cena2.png',
-                narration: 'No mercado da vila, um presente insidioso é dado.',
-                bubbles: [
-                    { text: 'Leve, minha jovem. É a maçã mais doce do reino.', type: 'speech' }
-                ]
-            },
-            {
-                id: 3,
-                image: 'imagens/cena3.png',
-                narration: 'Sob uma árvore centenária, a dúvida sussurra. O suspense cresce.',
-                bubbles: [
-                    { text: '...Algo não parece certo. O cheiro... e esse brilho...', type: 'thought' }
-                ]
-            },
-            {
-                id: 4,
-                image: 'imagens/cena4.png',
-                narration: 'O sono eterno vence. A história termina em silêncio.',
-                bubbles: [] 
-            },
-            {
-                id: 5,
-                image: 'imagens/cena5.png',
-                narration: 'Quando tudo parecia perdido... apareceu um herói que ninguém chamou. FIM. Infelizmente, para a bruxa.',
-                bubbles: [
-                    { text: 'SAI DA FRENTE, SHREK! EU VI ESSE FILME! É SÓ DAR UM BEIJO!', type: 'speech' },
-                    { text: 'EU PASSEI TRÊS DIAS PREPARANDO ESSE VENENO!!!', type: 'speech' },
-                    { text: 'AAAAH! UM BURRO?!', type: 'speech' },
-                    { text: 'DE NADA, PRINCESA! ACEITO CENOURAS!', type: 'speech' }
-                ]
-            }
-        ];
-
-        function buildComic() {
-            const container = document.getElementById('comicContainer');
-            
-            scenesData.forEach(scene => {
-                const sceneDiv = document.createElement('div');
-                sceneDiv.className = `scene scene-${scene.id}`;
-                
-                // Imagem com tratamento de erro
-                const img = document.createElement('img');
-                img.src = scene.image;
-                img.alt = `Cena ${scene.id}`;
-                img.onerror = function() {
-                    this.style.display = 'none'; // Esconde a imagem quebrada
-                    const errorMsg = document.createElement('div');
-                    errorMsg.style.color = 'white';
-                    errorMsg.style.padding = '20px';
-                    errorMsg.style.textAlign = 'center';
-                    errorMsg.innerHTML = `<p>⚠️ Imagem não encontrada: <b>${scene.image}</b></p><p>Verifique se a pasta 'imagens' e o nome do arquivo estão corretos.</p>`;
-                    sceneDiv.insertBefore(errorMsg, sceneDiv.firstChild);
-                };
-                sceneDiv.appendChild(img);
-
-                // Narração
-                if (scene.narration) {
-                    const narr = document.createElement('div');
-                    narr.className = 'narration-box';
-                    narr.innerText = scene.narration;
-                    sceneDiv.appendChild(narr);
-                }
-
-                // Balões
-                scene.bubbles.forEach((bubble, index) => {
-                    const bubbleDiv = document.createElement('div');
-                    bubbleDiv.className = `bubble bubble-${index + 1}`;
-                    if (bubble.type === 'thought') {
-                        bubbleDiv.style.borderRadius = '50% / 20%';
-                    }
-                    bubbleDiv.innerText = bubble.text;
-                    sceneDiv.appendChild(bubbleDiv);
-                });
-
-                // Botão Ouvir
-                const btn = document.createElement('button');
-                btn.className = 'btn-listen';
-                btn.innerHTML = `
-                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                    Ouvir
-                `;
-                btn.onclick = () => speakScene(scene);
-                sceneDiv.appendChild(btn);
-
-                container.appendChild(sceneDiv);
-            });
-        }
-
-        function speakScene(scene) {
-            if (!('speechSynthesis' in window)) {
-                alert("Seu navegador não suporta a leitura em voz alta. Tente usar o Google Chrome.");
-                return;
-            }
-
-            window.speechSynthesis.cancel();
-
-            let fullText = "";
-            if (scene.narration) fullText += scene.narration + " ";
-            scene.bubbles.forEach(b => {
-                fullText += b.text + " ";
-            });
-
-            const utterance = new SpeechSynthesisUtterance(fullText);
-            utterance.lang = 'pt-BR';
-            utterance.rate = 1.0;
-
-            const voices = window.speechSynthesis.getVoices();
-            const ptVoice = voices.find(voice => voice.lang.includes('pt-BR') || voice.lang.includes('pt-PT'));
-            if (ptVoice) utterance.voice = ptVoice;
-
-            window.speechSynthesis.speak(utterance);
-        }
-
-        window.onload = () => {
-            buildComic();
-            if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
-                speechSynthesis.onvoiceschanged = () => {};
-            }
-        };
-    </script>
+<footer>
+HQ Digital
+Projeto de Programação
+</footer>
 </body>
 </html>
+book
+Material: "PASSO A PASSO"
+FABIANA PALLU postou um novo material: PASSO A PASSO
+Criado em: 10:4310:43
+book
+Material: "HQ - 1"
+FABIANA PALLU postou um novo material: HQ - 1
+Criado em: 12 de nov.12 de nov.
+book
+Material: "HQ"
+FABIANA PALLU post
