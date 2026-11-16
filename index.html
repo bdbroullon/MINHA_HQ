@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HQ Digital: O Conto da Maçã</title>
+    <style>
+        /* Variáveis de estilo */
+        :root {
+            --bg-color: #1a1a1a;
+            --panel-bg: #2a2a2a;
+            --text-color: #333;
+            --btn-bg: #d32f2f;
+            --btn-hover: #b71c1c;
+            --btn-text: #fff;
+            --border-color: #000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #ffeb3b;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #ddd;
+        }
+
+        /* Container da HQ */
+        .comic-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Painel da Cena */
+        .scene {
+            position: relative;
+            width: 100%;
+            border: 8px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+            background-color: #fff;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .scene:hover {
+            transform: scale(1.01);
+        }
+
+        .scene img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Caixa de Narração (Legenda) */
+        .narration-box {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #ffeb3b;
+            color: #000;
+            padding: 10px 15px;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            font-weight: bold;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            max-width: 60%;
+            z-index: 10;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        /* Balões de Diálogo (Posicionamento fixo por cena) */
+        .bubble {
+            position: absolute;
+            background-color: #fff;
+            color: #000;
+            border: 3px solid #000;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+            font-weight: bold;
+            max-width: 45%;
+            z-index: 10;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        /* Rabinho do balão (CSS puro) */
+        .bubble::after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+        }
+
+        /* Posições específicas dos balões (Ajuste fino por cena) */
+        /* Cena 1 */
+        .scene-1 .bubble-1 {
+            bottom: 10%; right: 5%;
+        }
+        .scene-1 .bubble-1::after {
+            border-width: 15px 15px 0 0;
+            border-color: #fff transparent transparent transparent;
+            bottom: -12px; right: 20px;
+        }
+        .scene-1 .bubble-1::before {
+            content: ''; position: absolute;
+            border-width: 18px 18px 0 0;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+            bottom: -24px; right: 17px;
+            z-index: -1;
+        }
+
+        /* Cena 2 */
+        .scene-2 .bubble-1 {
+            top: 10%; right: 5%;
+        }
+        .scene-2 .bubble-1::after {
+            border-width: 15px 15px 0 0;
+            border-color: #fff transparent transparent transparent;
+            bottom: -12px; left: 20px;
+        }
+        .scene-2 .bubble-1::before {
+            content: ''; position: absolute;
+            border-width: 18px 18px 0 0;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+            bottom: -24px; left: 17px;
+            z-index: -1;
+        }
+
+        /* Cena 3 (Pensamento) */
+        .scene-3 .bubble-1 {
+            top: 10%; right: 5%;
+            border-radius: 50% / 20%; /* Balão de pensamento */
+        }
+        .scene-3 .bubble-1::after {
+            border-width: 15px 0 0 15px;
+            border-color: #fff transparent transparent transparent;
+            bottom: -10px; left: 30px;
+        }
+        .scene-3 .bubble-1::before {
+            content: ''; position: absolute;
+            border-width: 18px 0 0 18px;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+            bottom: -22px; left: 27px;
+            z-index: -1;
+        }
+
+        /* Cena 4 */
+        .scene-4 .bubble-1 { display: none; } /* Sem balão nesta cena, só narração */
+
+        /* Cena 5 (Múltiplos balões) */
+        .scene-5 .bubble-1 { /* Burro */
+            top: 35%; left: 5%;
+            max-width: 40%;
+        }
+        .scene-5 .bubble-1::after {
+            border-width: 0 15px 15px 0;
+            border-color: transparent #fff transparent transparent;
+            top: -12px; left: 20px;
+        }
+        .scene-5 .bubble-1::before {
+            content: ''; position: absolute;
+            border-width: 0 18px 18px 0;
+            border-style: solid;
+            border-color: transparent #000 transparent transparent;
+            top: -24px; left: 17px;
+            z-index: -1;
+        }
+        
+        .scene-5 .bubble-2 { /* Bruxa */
+            top: 5%; right: 5%;
+            max-width: 35%;
+            background-color: #ffeb3b;
+        }
+        .scene-5 .bubble-2::after {
+            border-width: 15px 15px 0 0;
+            border-color: #ffeb3b transparent transparent transparent;
+            bottom: -12px; left: 20px;
+        }
+        .scene-5 .bubble-2::before {
+            content: ''; position: absolute;
+            border-width: 18px 18px 0 0;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+            bottom: -24px; left: 17px;
+            z-index: -1;
+        }
+
+        .scene-5 .bubble-3 { /* Princesa */
+            bottom: 25%; right: 5%;
+            max-width: 35%;
+        }
+        .scene-5 .bubble-3::after {
+            border-width: 15px 0 0 15px;
+            border-color: #fff transparent transparent transparent;
+            top: 40%; left: -12px;
+        }
+        .scene-5 .bubble-3::before {
+            content: ''; position: absolute;
+            border-width: 18px 0 0 18px;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+            top: 38%; left: -24px;
+            z-index: -1;
+        }
+
+        /* Botão Ouvir */
+        .btn-listen {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: 3px solid #000;
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .btn-listen:hover {
+            background-color: var(--btn-hover);
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .btn-listen:active {
+            transform: translate(3px, 3px);
+            box-shadow: none;
+        }
+
+        .btn-listen svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Responsividade para telas menores */
+        @media (max-width: 600px) {
+            .narration-box {
+                top: 10px; left: 10px; padding: 8px;
+                max-width: 70%;
+            }
+            .bubble {
+                padding: 8px 10px;
+                max-width: 55% !important;
+            }
+            .btn-listen {
+                bottom: 10px; right: 10px; padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>O Conto da Maçã</h1>
+        <p>Role para baixo e leia a história</p>
+    </header>
+
+    <main class="comic-container" id="comicContainer">
+        <!-- As cenas serão inseridas aqui via JavaScript -->
+    </main>
+
+    <script>
+        // Roteiro da HQ (Transcrito das imagens)
+        const scenesData = [
+            {
+                id: 1,
+                image: 'imagens/cena1.png',
+                narration: 'Nas sombras de um castelo esquecido, a traição fermenta.',
+                bubbles: [
+                    { text: 'Apenas uma gota deste elixir e o sono eterno será dele.', type: 'speech' }
+                ]
+            },
+            {
+                id: 2,
+                image: 'imagens/cena2.png',
+                narration: 'No mercado da vila, um presente insidioso é dado.',
+                bubbles: [
+                    { text: 'Leve, minha jovem. É a maçã mais doce do reino.', type: 'speech' }
+                ]
+            },
+            {
+                id: 3,
+                image: 'imagens/cena3.png',
+                narration: 'Sob uma árvore centenária, a dúvida sussurra. O suspense cresce.',
+                bubbles: [
+                    { text: '...Algo não parece certo. O cheiro... e esse brilho...', type: 'thought' }
+                ]
+            },
+            {
+                id: 4,
+                image: 'imagens/cena4.png',
+                narration: 'O sono eterno vence. A história termina em silêncio.',
+                bubbles: [] // Sem balões
+            },
+            {
+                id: 5,
+                image: 'imagens/cena5.png',
+                narration: 'Quando tudo parecia perdido... apareceu um herói que ninguém chamou. FIM. Infelizmente, para a bruxa.',
+                bubbles: [
+                    { text: 'SAI DA FRENTE, SHREK! EU VI ESSE FILME! É SÓ DAR UM BEIJO!', type: 'speech', position: 1 },
+                    { text: 'EU PASSEI TRÊS DIAS PREPARANDO ESSE VENENO!!!', type: 'speech', position: 2 },
+                    { text: 'AAAAH! UM BURRO?!', type: 'speech', position: 3 },
+                    { text: 'DE NADA, PRINCESA! ACEITO CENOURAS!', type: 'speech', position: 4 }
+                ]
+            }
+        ];
+
+        // Função para construir a HQ
+        function buildComic() {
+            const container = document.getElementById('comicContainer');
+            
+            scenesData.forEach(scene => {
+                const sceneDiv = document.createElement('div');
+                sceneDiv.className = `scene scene-${scene.id}`;
+                
+                // Imagem
+                const img = document.createElement('img');
+                img.src = scene.image;
+                img.alt = `Cena ${scene.id}`;
+                sceneDiv.appendChild(img);
+
+                // Narração
+                if (scene.narration) {
+                    const narr = document.createElement('div');
+                    narr.className = 'narration-box';
+                    narr.innerText = scene.narration;
+                    sceneDiv.appendChild(narr);
+                }
+
+                // Balões
+                scene.bubbles.forEach((bubble, index) => {
+                    const bubbleDiv = document.createElement('div');
+                    bubbleDiv.className = `bubble bubble-${index + 1}`; // Classe para posicionamento CSS
+                    if (bubble.type === 'thought') {
+                        bubbleDiv.style.borderRadius = '50% / 20%'; // Estilo de pensamento
+                    }
+                    bubbleDiv.innerText = bubble.text;
+                    sceneDiv.appendChild(bubbleDiv);
+                });
+
+                // Botão Ouvir
+                const btn = document.createElement('button');
+                btn.className = 'btn-listen';
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                    Ouvir
+                `;
+                
+                // Lógica de fala
+                btn.onclick = () => speakScene(scene);
+                sceneDiv.appendChild(btn);
+
+                container.appendChild(sceneDiv);
+            });
+        }
+
+        // Função de Text-to-Speech
+        function speakScene(scene) {
+            // Cancela qualquer fala em andamento
+            window.speechSynthesis.cancel();
+
+            // Junta narração e diálogos em um único texto
+            let fullText = "";
+            if (scene.narration) fullText += scene.narration + " ";
+            scene.bubbles.forEach(b => {
+                fullText += b.text + " ";
+            });
+
+            // Configura a síntese de voz
+            const utterance = new SpeechSynthesisUtterance(fullText);
+            utterance.lang = 'pt-BR'; // Português do Brasil
+            utterance.rate = 1.0; // Velocidade normal
+            utterance.pitch = 1.0; // Tom normal
+
+            // Tenta encontrar uma voz em português
+            const voices = window.speechSynthesis.getVoices();
+            const ptVoice = voices.find(voice => voice.lang.includes('pt-BR') || voice.lang.includes('pt-PT'));
+            if (ptVoice) {
+                utterance.voice = ptVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Inicializa a construção da página
+        window.onload = () => {
+            buildComic();
+            
+            // Necessário para carregar as vozes em alguns navegadores (Chrome)
+            if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = () => {};
+            }
+        };
+    </script>
+</body>
+</html>
